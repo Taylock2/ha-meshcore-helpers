@@ -1,0 +1,68 @@
+blueprint:
+  name: Meshcore Location Fuzzer
+  description: >
+    Regularly fuzzed a Meshcore node's location within a defined radius for privacy or testing. 
+    This creates an automation that triggers on a schedule to update the node's coordinates.
+  domain: automation
+  input:
+    update_interval:
+      name: Update Interval
+      description: How often should the location be updated? (e.g., /1 for every hour)
+      default: "/1"
+      selector:
+        text:
+    node_name:
+      name: Node Name
+      description: The ID of the node to update (e.g., VIC-FAWKNER-EDG-01).
+      selector:
+        text:
+    base_location:
+      name: Base Position
+      description: The center point for the fuzzing area.
+      selector:
+        location:
+    radius:
+      name: Fuzz Radius
+      description: Maximum distance in meters to offset the position.
+      default: 400
+      selector:
+        number:
+          min: 50
+          max: 1000
+          unit_of_measurement: m
+          step: 5
+
+mode: restart
+
+trigger:
+  - platform: time_pattern
+    hours: !input update_interval
+
+variables:
+  node_name: !input node_name
+  base_location: !input base_location
+  radius: !input radius
+  lat_base: "{{ base_location.latitude }}"
+  lon_base: "{{ base_location.longitude }}"
+  # 1m lat approx 0.000009, 1m lon approx 0.000012
+  lat_offset_max: "{{ (radius * 0.9) | int }}"
+  lon_offset_max: "{{ (radius * 1.2) | int }}"
+
+action:
+  - alias: "Set fuzzed lon on node"
+    action: meshcore.send_message
+    data:
+      node_id: "{{ node_name }}"
+      message: >
+        {% set fuzz = (range(-lon_offset_max, lon_offset_max) | random) / 100000 %}
+        set lon {{ (lon_base + fuzz) | round(6) }}
+
+  - delay: 5
+
+  - alias: "Set fuzzed lat on node"
+    action: meshcore.send_message
+    data:
+      node_id: "{{ node_name }}"
+      message: >
+        {% set fuzz = (range(-lat_offset_max, lat_offset_max) | random) / 100000 %}
+        set lat {{ (lat_base + fuzz) | round(6) }}
