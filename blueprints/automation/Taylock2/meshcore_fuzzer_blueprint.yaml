@@ -18,7 +18,9 @@ blueprint:
         text:
     base_location:
       name: Base Position
-      description: The center point for the fuzzing area.
+      description: >
+        The center point for the fuzzing area.
+        Avoid your actual location — fuzzed coordinates can still be triangulated.
       selector:
         location:
     radius:

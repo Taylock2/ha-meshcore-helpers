@@ -18,7 +18,7 @@ This blueprint automatically updates a MeshCore node's location within a defined
 ---
 
 ## Installation
-1. Ensure you have the `meshcore ha` integration configured in Home Assistant.
+1. Ensure you have the `meshcore-ha` integration configured in Home Assistant.
 2. Click the **Import** button above or copy the URL of the YAML file.
 3. In Home Assistant, go to **Settings > Automations > Blueprints > Import Blueprint**.
 4. Create a new automation using the blueprint and select your target node and base location.
