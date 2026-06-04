@@ -1,0 +1,35 @@
+name: "Meshcore RemoteTerm"
+version: "1.0.30"
+slug: "remoteterm"
+description: "Backend server + browser interface for MeshCore mesh radio networks"
+url: "https://github.com/jkingsman/Remote-Terminal-for-MeshCore"
+arch:
+  - aarch64
+  - amd64
+init: false
+ports:
+  8000/tcp: 8000
+usb: true
+uart: true
+options:
+  connection_type: "Serial"
+  serial_port: ""
+  serial_baudrate: 115200
+  tcp_host: ""
+  tcp_port: 5000
+  meshcore_log_level: "INFO"
+  meshcore_disable_bots: false
+  username: "admin"
+  password: ""
+schema:
+  connection_type: "list(Serial|TCP)"
+  serial_port: "str?"
+  serial_baudrate: "int?"
+  tcp_host: "str?"
+  tcp_port: "int?"
+  meshcore_log_level: "list(DEBUG|INFO|WARNING|ERROR)"
+  meshcore_disable_bots: "bool"
+  username: "str?"
+  password: "password?"
+map:
+  - config:rw
